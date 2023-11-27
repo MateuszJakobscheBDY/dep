@@ -6,6 +6,16 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-{{ circleci-project-setup }}
+          paths:
+            - /caches/app.tar
+      - run:
+          name: "load cache"
+          command: |
+            set +o pipefail
+            docker load -i /caches/app.tar | true
       - run:
           name: "execute docker build"
           command: "docker build -t test ."
